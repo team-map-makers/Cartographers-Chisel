@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import './App.css';
-import Map from './uicomponents/Map/Map.js';
-import ModeSelect from './uicomponents/ModeSelect/ModeSelect'
+import './ModeSelect.scss';
+//import svg from '../../logo.svg';
 
-class App extends Component {
+class ModeSelect extends Component {
 
   constructor(props) {
     super(props);
@@ -25,13 +24,13 @@ class App extends Component {
   }
   render() {
     return (
-      <div className="mainContainer">
-        <Map/>
-        <ModeSelect></ModeSelect>
+      <div className="ModeSelect-main">
+      <button>Map</button>
+      <button>Edit</button>
+      <button>Note</button>
       </div>
-      
     );
   }
 }
 
-export default App;
+export default ModeSelect;

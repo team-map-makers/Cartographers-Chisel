@@ -24,10 +24,10 @@ class ModeSelect extends Component {
   }
   render() {
     return (
-      <div className="ModeSelect-main">
-      <button>Map</button>
-      <button>Edit</button>
-      <button>Note</button>
+      <div className="Mode-main">
+        <i className="fas fa-paint-brush" ></i>
+        <i className="fas fa-sticky-note"></i>
+        <i className="fas fa-map"></i>
       </div>
     );
   }

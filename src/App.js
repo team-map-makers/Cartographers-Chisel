@@ -26,10 +26,12 @@ class App extends Component {
   render() {
     return (
       <div className="mainContainer">
+        
         <Map/>
-        <ModeSelect></ModeSelect>
+        <div className="mainGrid">
+          <ModeSelect/>
+        </div>
       </div>
-      
     );
   }
 }

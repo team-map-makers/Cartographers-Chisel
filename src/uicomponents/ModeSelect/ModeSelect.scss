@@ -1,23 +1,28 @@
 
 .Mode-main {
+     
     align-items: center;
-    grid-column: 5/9;
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    margin-left: -20vmax;
+    z-index: 3;
     background-color: #fff;
     height: 48px;
+    width: 40vmax;
     border-radius: 25px;
-    grid-row: 8;
     display: -webkit-flex;
-                  display: -ms-flexbox;
-                  display: flex;
+    display: -ms-flexbox;
+    display: flex;
               
-                  /*Align children horizontally*/
-                  -webkit-flex-direction: row;
-                  -ms-flex-direction: row;
-                  flex-direction: row;
+    /*Align children horizontally*/
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
               
-                  -webkit-align-content: flex-start;
-                  -ms-flex-line-pack: start;
-                  align-content: flex-start;
+    -webkit-align-content: flex-start;
+    -ms-flex-line-pack: start;
+    align-content: flex-start;
   }
   .Mode-main i {
     display: inline-block;

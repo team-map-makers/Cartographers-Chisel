@@ -1,15 +1,19 @@
 import React, { Component } from 'react';
 import './Map.scss';
 import GenerateMap from '../../mapfunctions/GenerateMap';
+import {INITIAL_VALUE, ReactSVGPanZoom, TOOL_NONE} from 'react-svg-pan-zoom';
 
 import mapFile from '../Map/fm.svg';
 
 class Map extends Component {
 
+  Viewer = null;
   constructor(props) {
     super(props);
     this.state = {
       isToggleOn: true,
+      tool: TOOL_NONE, 
+      value: INITIAL_VALUE,
       mapData:{
         cells:[
           {
@@ -32,41 +36,60 @@ class Map extends Component {
     };
 
     // This binding is necessary to make `this` work in the callback
-    this.handleClick = this.handleClick.bind(this);
+    this.componentDidMount = this.componentDidMount.bind(this);
   }
 
   componentDidMount(){
-    fetch(mapFile)
-   .then(response => response.text())
-   .then(svgData => {this.setState({svg:svgData});});
-    window.mapData =this.state.mapData;
-    window.findIdd = function(elements){
-      return elements.id ===1;
-    }
+    this.Viewer.zoomOnViewerCenter(.6);
     var generateMap = new GenerateMap();
-    var mapData = {};
-    mapData.cells =generateMap.init();
-    this.setState({mapData:mapData});
+    var mapDataz = {};
+    mapDataz.cells =generateMap.init();
+    this.setState({mapData:mapDataz});
   }
-  handleClick() {
-    console.log("help");
-    var themtree = 89;
-    this.setState(state => ({
-      isToggleOn: !state.isToggleOn
-      
-    }));
-    themtree =themtree + 46;
-    console.log(themtree);
+
+  changeTool(nextTool) {
+    this.setState({tool: nextTool})
+  }
+
+  changeValue(nextValue) {
+    this.setState({value: nextValue})
+  }
+
+  fitToViewer() {
+    this.Viewer.fitToViewer()
+  }
+
+  fitSelection() {
+    this.Viewer.fitSelection(40, 40, 200, 200)
+  }
+
+  zoomOnViewerCenter() {
+    this.Viewer.zoomOnViewerCenter(1.1)
   }
   render() {
     const cells = this.state.mapData.cells.map((cell) =>
     <path d={cell.d} fill={cell.fill} key={cell.key}/>
-)
+    )
+    var miniatureProps = {};
+    //miniatureProps.position ="none";
     return (
       <div className="Map-main">
-      <svg viewBox="0 0 2000 2000">
+      <ReactSVGPanZoom
+          width={this.props.width} height={this.props.height}
+          ref={Viewer => this.Viewer = Viewer}
+          tool={this.state.tool} onChangeTool={tool => this.changeTool(tool)}
+          value={this.state.value} onChangeValue={value => this.changeValue(value)}
+
+          miniatureProps={miniatureProps}
+          onZoom={e => console.log('zoom')}
+          onPan={e => console.log('pan')}
+
+          onClick={event => console.log('click', event.x, event.y, event.originalEvent)}
+        >
+      <svg width={2000} height={1000}>
       {cells}
       </svg>
+      </ReactSVGPanZoom>
       </div>
     );
   }

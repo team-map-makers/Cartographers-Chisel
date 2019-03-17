@@ -3,31 +3,30 @@ class GenerateMap {
 
   
   constructor() {
-    this.generate = this.generate.bind(this);
     this.init = this.init.bind(this);
-    this.generate();
   }
-  generate(){
-    window.d3= d3;
-    return "hello"
-  }
+  mapData ={};
   init(){
-    var sites = d3.range(1000).map(function(d) {
-      return [Math.random() * 2000, Math.random() * 2000];
-    }),
-    voronoi = d3.voronoi().extent([[0, 0],[2000, 2000]]),
-    diagram = voronoi(sites),
-    color = d3.scaleSequential(d3.interpolateSpectral),
-    cells = [];
+    var MAP_HEIGHT = 1000;
+    var MAP_WIDTH = 2000;
+    //his.mapData.width =2000;
+    //this.mapData.height =1000;
+    this.mapData.sites = d3.range(1000).map(function(d) {
+      return [Math.random(1) * MAP_WIDTH, Math.random(1) * MAP_HEIGHT];
+    });
+    var voronoi = d3.voronoi().extent([[0, 0],[MAP_WIDTH, MAP_HEIGHT]]);
+    this.mapData.diagram = voronoi(this.mapData.sites);
+    var color = d3.scaleSequential(d3.interpolateSpectral);
+    this.mapData.cells = [];
     //debugger;
-    cells = diagram.polygons().map(function(path, id) {
+    this.mapData.cells = this.mapData.diagram.polygons().map(function(path, id) {
       var cell ={};
       cell.key = id;
       cell.d = "M" + path.join("L") + "Z";
       cell.fill=color(id/2000);
       return cell;
     })
-    return cells
+    return this.mapData.cells
   }
   // init(height,width){
 
@@ -52,19 +51,6 @@ class GenerateMap {
   // }
        
   //     // Adding relax function
-  // relax(svg,sites,diagram,polygons,voronoi,color) {
-  //       //iteration.value = +iteration.value + 1;
-  //   svg.selectAll("path").remove();
-  //   sites = voronoi(sites).polygons().map(d3.polygonCentroid);
-  //   diagram = voronoi(sites);
-  //   polygons = d3.diagram.polygons(); 
-       
-  //       // Redraw polygons after relaxation
-  //   polygons.map(function(i, d) {
-  //   svg.append("path")
-  //   .attr("d", "M" + i.join("L") + "Z")
-  //  // .attr("fill", color(d/1000)); });
-  // }
 }
 
 export default GenerateMap;

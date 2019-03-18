@@ -2,13 +2,15 @@ import React, { Component } from 'react';
 import './App.css';
 import Map from './uicomponents/Map/Map.js';
 import ModeSelect from './uicomponents/ModeSelect/ModeSelect'
+import Search from './uicomponents/Search/Search';
 
 class App extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { width: 100, height: 100 };
+    this.state = { width: 100, height: 100, mode:"edit" };
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+    this.changeMode= this.changeMode.bind(this);
   }
   componentDidMount() {
     this.updateWindowDimensions();
@@ -22,11 +24,15 @@ class App extends Component {
   updateWindowDimensions() {
     this.setState({ width: window.innerWidth, height: window.innerHeight });
   }
+  changeMode(newMode){
+    this.setState({mode:newMode});
+  }
   render() {
     return (
-      <div className="mainContainer">
+      <div className="mainContainer" >
         <Map width={this.state.width} height={this.state.height} />
-        <ModeSelect/>
+        <Search></Search>
+        <ModeSelect mode={this.state.mode} changeMode={this.changeMode}/>
       </div>
     );
   }

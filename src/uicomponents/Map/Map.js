@@ -3,8 +3,6 @@ import './Map.scss';
 import GenerateMap from '../../mapfunctions/GenerateMap';
 import {INITIAL_VALUE, ReactSVGPanZoom, TOOL_NONE} from 'react-svg-pan-zoom';
 
-import mapFile from '../Map/fm.svg';
-
 class Map extends Component {
 
   Viewer = null;

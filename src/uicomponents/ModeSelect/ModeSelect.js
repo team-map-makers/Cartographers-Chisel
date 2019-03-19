@@ -2,18 +2,11 @@ import React, { Component } from 'react';
 import './ModeSelect.scss';
 //import svg from '../../logo.svg';
 
+/**
+ * React Component that lets you pick mode for application. 
+ */
 class ModeSelect extends Component {
 
-  constructor(props) {
-    super(props);
-
-    // This binding is necessary to make `this` work in the callback
-    this.handleClick = this.handleClick.bind(this);
-  }
-
-  handleClick(newMode) {
-    alert(newMode)
-  }
   render() {
     return (
       <div className="Mode-main" >

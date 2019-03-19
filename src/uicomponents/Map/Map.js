@@ -2,14 +2,20 @@ import React, { Component } from 'react';
 import './Map.scss';
 import GenerateMap from '../../mapfunctions/GenerateMap';
 import {INITIAL_VALUE, ReactSVGPanZoom, TOOL_NONE} from 'react-svg-pan-zoom';
-
+/**
+ * React Component that contains the map and controlls for map.
+ * @prop height - map height.
+ * @prop width - map width.
+ * @state mapData - Array of cells to be drawn on map
+ * @state tool - Tool define how interacting with map
+ * @state value - Value used by ReactSVGPanZoom
+ */
 class Map extends Component {
 
   Viewer = null;
   constructor(props) {
     super(props);
     this.state = {
-      isToggleOn: true,
       tool: TOOL_NONE, 
       value: INITIAL_VALUE,
       mapData:{
@@ -37,39 +43,72 @@ class Map extends Component {
     this.componentDidMount = this.componentDidMount.bind(this);
   }
 
+  /**
+   * Default React function, called when component loads.
+   * Generates the starting mapData state.
+   */
   componentDidMount(){
     this.Viewer.zoomOnViewerCenter(.6);
     var generateMap = new GenerateMap();
     var mapDataz = {};
     mapDataz.cells =generateMap.init();
+
+    
+    generateMap.geoJsonDrawMap().then((result) => {
+      console.log(result);
+      var mapDataz1 = {};
+      mapDataz1.cells= [];
+      mapDataz1.cells[0]= {};  
+      mapDataz1.cells[0].key=1;
+      mapDataz1.cells[0].d=result;
+      mapDataz1.cells[0].fill="black";
+      this.setState({mapData:mapDataz1});
+    });
     this.setState({mapData:mapDataz});
   }
-
+  /**
+   * Method defined by React-svg-pan-zoom to change between click, zoom, pan.
+   * @param {} nextTool Options defined by React-svg-pan-zoom
+   */
   changeTool(nextTool) {
     this.setState({tool: nextTool})
   }
-
+  /**
+   * Method defined by React-svg-pan-zoom.
+   * @param {} nextValue Options defined by React-svg-pan-zoom
+   */
   changeValue(nextValue) {
     this.setState({value: nextValue})
   }
-
+  /**
+   * Method defined by React-svg-pan-zoom.
+   */
   fitToViewer() {
     this.Viewer.fitToViewer()
   }
 
+  /**
+   * Method defined by React-svg-pan-zoom.
+   */
   fitSelection() {
     this.Viewer.fitSelection(40, 40, 200, 200)
   }
-
+  /**
+   * Method defined by React-svg-pan-zoom.
+   */
   zoomOnViewerCenter() {
     this.Viewer.zoomOnViewerCenter(1.1)
   }
+  /**
+   * Default React Method called when states or props update. 
+   */
   render() {
+    //gets the mapdata state and turns it into jsx svg nodes
     const cells = this.state.mapData.cells.map((cell) =>
-    <path d={cell.d} fill={cell.fill} key={cell.key}/>
-    )
+    <path d={cell.d} fill={cell.fill} key={cell.key } stroke-opacity="0.0"/>
+    );
+    
     var miniatureProps = {};
-    //miniatureProps.position ="none";
     return (
       <div className="Map-main">
       <ReactSVGPanZoom

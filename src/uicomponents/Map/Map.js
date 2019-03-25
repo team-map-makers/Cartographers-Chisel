@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './Map.scss';
 import GenerateMap from '../../mapfunctions/GenerateMap';
 import {INITIAL_VALUE, ReactSVGPanZoom, TOOL_NONE} from 'react-svg-pan-zoom';
+import {GithubPicker} from 'react-color';
 
 class Map extends Component {
 
@@ -30,6 +31,9 @@ class Map extends Component {
             fill:"rgb(159, 2, 66)",
           }
         ]
+      },
+      selector:{
+        key:null,
       }
     };
 
@@ -64,9 +68,22 @@ class Map extends Component {
   zoomOnViewerCenter() {
     this.Viewer.zoomOnViewerCenter(1.1)
   }
+  colorChange(color){
+    let {key} = this.state.selector;
+    debugger;
+    let {cells} = this.state.mapData;
+    cells = cells.map(cell=>{
+      if(cell.key===key) cell.fill = color.hex;
+      return cell
+    })
+    this.setState({mapData:{cells}});
+  }
+  pathOnClick(key){
+    this.setState({selector:{key}})
+  }
   render() {
     const cells = this.state.mapData.cells.map((cell) =>
-    <path d={cell.d} fill={cell.fill} key={cell.key}/>
+    <path d={cell.d} fill={cell.fill} key={cell.key} onClick={this.pathOnClick.bind(this,cell.key)}/>
     )
     var miniatureProps = {};
     //miniatureProps.position ="none";
@@ -88,6 +105,13 @@ class Map extends Component {
       {cells}
       </svg>
       </ReactSVGPanZoom>
+      <div className={"Color-Picker"} style={{
+          left:"40px", 
+          top:"50px", 
+          visibility:this.props.mode === "edit"? "visible" :"hidden"}}
+        >
+          <GithubPicker onChange={this.colorChange.bind(this)} />
+      </div>
       </div>
     );
   }

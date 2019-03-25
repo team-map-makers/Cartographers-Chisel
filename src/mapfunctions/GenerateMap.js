@@ -12,9 +12,8 @@ class GenerateMap {
     //his.mapData.width =2000;
     //this.mapData.height =1000;
     this.mapData.sites = d3.range(1000).map(function (d) {
-      return [Math.random(2) * MAP_WIDTH, Math.random(2) * MAP_HEIGHT];
+      return [Math.random(1) * MAP_WIDTH, Math.random(1) * MAP_HEIGHT];
     });
-    // Mat on a weight
     var voronoi = d3.voronoi().extent([
       [0, 0],
       [MAP_WIDTH, MAP_HEIGHT]

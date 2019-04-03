@@ -48,13 +48,13 @@ class Map extends Component {
    * Generates the starting mapData state.
    */
   componentDidMount(){
-    this.Viewer.zoomOnViewerCenter(.6);
+    //this.Viewer.zoomOnViewerCenter(.6);
     var generateMap = new GenerateMap();
     var mapDataz = {};
     mapDataz.cells =generateMap.init();
 
     
-    generateMap.geoJsonDrawMap().then((result) => {
+    generateMap.geoJsonDrawMap(this.props.width,this.props.height).then((result) => {
       console.log(result);
       var mapDataz1 = {};
       mapDataz1.cells= [];
@@ -62,9 +62,21 @@ class Map extends Component {
       mapDataz1.cells[0].key=1;
       mapDataz1.cells[0].d=result;
       mapDataz1.cells[0].fill="black";
-      this.setState({mapData:mapDataz1});
+      this.setState({mapData: mapDataz1});
     });
-    this.setState({mapData:mapDataz});
+  }
+  componentDidUpdate(){
+    var generateMap = new GenerateMap();
+    generateMap.geoJsonDrawMap(this.props.width,this.props.height).then((result) => {
+      console.log(result);
+      var mapDataz1 = {};
+      mapDataz1.cells= [];
+      mapDataz1.cells[0]= {};  
+      mapDataz1.cells[0].key=1;
+      mapDataz1.cells[0].d=result;
+      mapDataz1.cells[0].fill="black";
+      this.setState({mapData: mapDataz1});
+    });
   }
   /**
    * Method defined by React-svg-pan-zoom to change between click, zoom, pan.
@@ -111,7 +123,7 @@ class Map extends Component {
     var miniatureProps = {};
     return (
       <div className="Map-main">
-      <ReactSVGPanZoom
+      {/* <ReactSVGPanZoom
           width={this.props.width} height={this.props.height}
           ref={Viewer => this.Viewer = Viewer}
           tool={this.state.tool} onChangeTool={tool => this.changeTool(tool)}
@@ -122,11 +134,11 @@ class Map extends Component {
           onPan={e => console.log('pan')}
 
           onClick={event => console.log('click', event.x, event.y, event.originalEvent)}
-        >
-      <svg width={2000} height={1000}>
+        > */}
+      <svg width={this.props.width}  height={this.props.height}>
       {cells}
       </svg>
-      </ReactSVGPanZoom>
+      {/* </div></ReactSVGPanZoom> */}
       </div>
     );
   }

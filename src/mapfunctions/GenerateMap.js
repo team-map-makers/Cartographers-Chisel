@@ -4,18 +4,27 @@ class GenerateMap {
 
   constructor() {
     this.init = this.init.bind(this);
+    this.getPath = this.getPath.bind(this);
+    this.init = this.init.bind(this);
+    this.geoJsonDrawMap = this.geoJsonDrawMap.bind(this);
   }
   mapData ={};
+  height = null;
+  width = null;
+  json = null;
+  path = null;
+  projection = null;
+
 
   /**
    * Returns a Mapdata for a voronoi diagram
    */
   init(){
-    var MAP_HEIGHT = 1000;
-    var MAP_WIDTH = 2000;
+    var MAP_HEIGHT = 180;
+    var MAP_WIDTH = 360;
     //his.mapData.width =2000;
     //this.mapData.height =1000;
-    this.mapData.sites = d3.range(10).map(function(d) {
+    this.mapData.sites = d3.range(1000).map(function(d) {
       return [Math.random() * MAP_WIDTH, Math.random() * MAP_HEIGHT];
     });
     var voronoi = d3.voronoi().extent([[0, 0],[MAP_WIDTH, MAP_HEIGHT]]);
@@ -37,24 +46,33 @@ class GenerateMap {
    * A function that takes a geoJSON and returns its svg that data
    * @param {*} jsonLocation 
    */
-  geoJsonDrawMap(jsonLocation){
+  geoJsonDrawMap(height,width){
     return fetch("/us.json").then(function(response) {
       return response.json();
-    }).then(function(myJson) {
-      window.imports = JSON.stringify(myJson);
-      var projection = d3.geoAlbersUsa()
-				   .translate([2000/2, 1000/2])    // translate to center of screen
-				   .scale([1000]);          // scale things down so see entire US
-    // Define path generator
-    window.pathz = d3.geoPath()               // path generator that will convert GeoJSON to SVG paths
-      	 .projection(projection);  // tell path generator to use albersUsa projection
-    window.d3 = d3;
-    window.cellz = window.pathz(myJson);
-    return window.cellz;
-    });
+    }).then(json=>this.getPath(json,height,width));
     
   }
+
+  getPath(json,height,width){
+
+    window.imports = JSON.stringify(json);
+      //var projection = d3.geoOrthographic().translate([height/2,width/2]);
+      var projection = d3.geoConicEqualArea().translate([height/2,width/2]);
+      //var projection = d3.geoMercator().translate([height/2,width/2]).scale(100);
+           //.postclip(d3.geoClipRectangle(x0, y0, x1, y1));          // scale thngs down so see entire US
+    // Define path generator
+      window.pathz = d3.geoPath()               // path generator that will convert GeoJSON to SVG paths
+         .projection(projection); 
+         
+    
+    window.d3 = d3;
+    window.cellz = window.pathz(json);
+    return window.cellz;
+  }
+
 }
+
+
 
 export default GenerateMap;
 

@@ -1,0 +1,66 @@
+.noteBox-main{
+    position:absolute;
+    width: 500px;
+    height: 500px;
+    left: 20%;
+    top: 10px;
+    background: white;
+    margin-left:-250px;
+  }
+
+  .noteBox-Exit{
+    display: inline-block;
+    width: 10%;
+    height: 60%;
+    position:absolute;
+    background: red;
+    color:white; 
+    right:0% 
+    
+  }
+  .noteBox-Delete{
+    display: inline-block;
+    width: 10%;
+    height: 60%;
+    position:absolute;
+    background: red;
+    color:black;
+    right:20%
+  }
+  .noteBox-Edit{
+    display: inline-block;
+    width: 10%;
+    height: 60%;
+    position:absolute;
+    background: White;
+    color:black;
+    right:10%
+  }
+  .noteBox-Title{
+    display: inline-block;
+    width: 60%;
+    margin-left:5%;
+    resize: none;
+  }
+  .noteBox-barSpacer{
+    display: inline-block;
+    width: 10%;
+  }
+
+  .noteBox-TopBar{
+    position: relative;
+    font-size:20pt;
+    font-style: italic;
+    height:9%;
+    background:#eeeeee;
+  }
+
+  .noteBox-text{
+    height:91%;
+    word-wrap: break-word;
+    overflow-y: scroll;
+    padding:10px;
+    height: calc(91% - 20px);
+    width:calc(100% - 20px);
+    resize: none;
+  }

@@ -30,7 +30,7 @@ class App extends Component {
   render() {
     return (
       <div className="mainContainer" >
-        <Map width={this.state.width} height={this.state.height} />
+        <Map width={this.state.width} height={this.state.height} mode={this.state.mode} />
         <Search></Search>
         <ModeSelect mode={this.state.mode} changeMode={this.changeMode}/>
       </div>

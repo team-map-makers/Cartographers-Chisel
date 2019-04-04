@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './Map.scss';
 import GenerateMap from '../../mapfunctions/GenerateMap';
+import NoteBox from '../NoteBox/NoteBox';
 import {INITIAL_VALUE, ReactSVGPanZoom, TOOL_NONE} from 'react-svg-pan-zoom';
 
 class Map extends Component {
@@ -12,6 +13,34 @@ class Map extends Component {
       isToggleOn: true,
       tool: TOOL_NONE, 
       value: INITIAL_VALUE,
+      notePassed:null,
+      noteData:[
+        {
+          id:1,
+          title: "I am 1",
+          location:{x:1,y:7},
+          text: "There once was a man named micheal finQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQqQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@Q@Q@@Q@Q@Q@Q@Q@Q@Q@Q@Q@Q@QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQKHYGTHJKLMJNBGVGBHNJMK<LMHNBGFCGBHUJMK,imujnbhygtvfrcdrfbghnujmunhybgtvfQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ"
+        },
+        {
+          id:2,
+          title: "I am two",
+          location:{x:100,y:50},
+          text: "There once was a man named micheal fin"
+        },
+        {
+          id:3,
+          title: "Buring ssssssmad",
+          location:{x:50,y:100},
+          text: "There once was a man named micheal fin"
+        },
+        {
+          id:4,
+          title:"Supernote",
+          location:{x:400,y:600},
+          text: "Pizza hut"
+
+        }
+      ],
       mapData:{
         cells:[
           {
@@ -35,6 +64,12 @@ class Map extends Component {
 
     // This binding is necessary to make `this` work in the callback
     this.componentDidMount = this.componentDidMount.bind(this);
+    this.calcNote = this.calcNote.bind(this);
+    this.findNoteId = this.findNoteId.bind(this);
+    this.deselectNote = this.deselectNote.bind(this);
+    this.updateNote = this.updateNote.bind(this);
+    this.removeNote = this.removeNote.bind(this);
+    //this.addNote = this.addNote.bind(this);
   }
 
   componentDidMount(){
@@ -44,6 +79,19 @@ class Map extends Component {
     mapDataz.cells =generateMap.init();
     this.setState({mapData:mapDataz});
   }
+
+  /*
+  addNote(x,y){
+    if(this.props.mode === "edit"){
+      //create note at this x,y position, giving x and y to the note constructor
+      var note = new note(x,y);
+      mapData.push(note);
+      
+    }
+  }
+*/
+ 
+
 
   changeTool(nextTool) {
     this.setState({tool: nextTool})
@@ -64,10 +112,50 @@ class Map extends Component {
   zoomOnViewerCenter() {
     this.Viewer.zoomOnViewerCenter(1.1)
   }
+
+  calcNote(x ,y){
+    //this.calcNote
+
+    return "x = "+x+", y = "+y;
+
+  }
+
+  getNoteID(id){
+    if(this.props.mode=='note'){
+    this.setState({notePassed:id});
+    }
+  }
+  findNoteId(e){
+    return e.id == this.state.notePassed;
+  }
+  deselectNote(){
+    this.setState({notePassed:null});
+  }
+  updateNote(note){
+    this.setState({noteData:[note]});
+  }
+  removeNote(note) {
+    var array = [...this.state.noteData];
+    console.log(array); // make a separate copy of the array
+    console.log(note);
+    var index = array.indexOf(note);
+    if (index !== -1) {
+      array.splice(index, 1);
+      console.log(array);
+      this.setState({noteData: array});
+    }
+  }
   render() {
     const cells = this.state.mapData.cells.map((cell) =>
-    <path d={cell.d} fill={cell.fill} key={cell.key}/>
+    <path d={cell.d} fill={cell.fill} key={cell.key} />
     )
+    const notes = this.state.noteData.map((note)=> 
+    <circle cx={note.location.x} cy={note.location.y} r="20" stroke="red" fill="red" strokeWidth="5" onClick={this.getNoteID.bind(this, note.id)}/>
+    )
+    var notePassedFull = null;
+    if(this.state.notePassed!=null){
+      notePassedFull=this.state.noteData.find(this.findNoteId);
+    }
     var miniatureProps = {};
     //miniatureProps.position ="none";
     return (
@@ -82,12 +170,19 @@ class Map extends Component {
           onZoom={e => console.log('zoom')}
           onPan={e => console.log('pan')}
 
-          onClick={event => console.log('click', event.x, event.y, event.originalEvent)}
+          onClick={event => console.log(this.calcNote(event.x, event.y))}//console.log('click', event.x, event.y, event.originalEvent)}
+          //onClick={event => this.addNote(event.x, event.y)}//console.log('click', event.x, event.y, event.originalEvent)}
+
         >
-      <svg width={2000} height={1000}>
+      <svg width={2000} height={1000} >
       {cells}
+      {notes}
+      
       </svg>
       </ReactSVGPanZoom>
+      <NoteBox mode={this.props.mode} note={notePassedFull} exitEvent={this.deselectNote} updateNote={this.updateNote} removeNote={this.removeNote}>
+      </NoteBox>
+
       </div>
     );
   }

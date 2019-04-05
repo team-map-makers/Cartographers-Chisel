@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
 import { SignUpLink } from '../SignUp';
+import { PasswordForgotLink } from '../PasswordForgot';
 import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../firebaseconstants/routes';
 
@@ -10,6 +11,7 @@ const SignInPage = () => (
     <div>
         <h1>SignIn</h1>
         <SignInForm />
+        <PasswordForgotLink />
         <SignUpLink />
     </div>
 );
@@ -76,7 +78,7 @@ class SignInFormBase extends Component {
     }
 }
 
-const SignInForm = Compose(withRouter, withFirebase,)(SignInFormBase);
+const SignInForm = compose(withRouter, withFirebase,)(SignInFormBase);
 
 export default SignInPage;
 

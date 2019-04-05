@@ -1,45 +1,47 @@
 import React from 'react';
 import { Link } from 'reac-router-dom';
 
+import { AuthUserContext } from '../Session';
 import SignOutButton from '../SignOut';
 import * as ROUTES from '../../firebaseconstants/routes';
-import { AuthUserContext } from '../Session';
+import * as ROLES from '../../firebaseconstants/roles';
+
 
 const Navigation = () => (
-    <div>
         <AuthUserContext.Consumer>
             {authUser => 
-                authUser ? <NavigationAuth /> : <NavigationNonAuth />
+                authUser ? (<NavigationAuth authUser={authUser} />) : (<NavigationNonAuth />)
             }
         </AuthUserContext.Consumer>
-    </div>
 )
 
 //const Navigation = ( { authUser }) => (
 //    <div>{authUser ? <NavigationAuth /> :  <NavigationNonAuth />}</div>
 //);
 
-//const NavigationAuth = () => (
-//    <div>
-//        <ul>
-//           <li><Link to={ROUTES.LANDING}>Landing</Link></li>
-//            <li><Link to={ROUTES.HOME}>Home</Link></li>
-//            <li><Link to={ROUTES.ACCOUNT}>Account</Link></li>
-//            <li><SignOutButton /></li>
-//        </ul>
-//    </div>
-//);
+const NavigationAuth = ({ authUser }) => (
+    <div>
+        <ul>
+           <li><Link to={ROUTES.LANDING}>Landing</Link></li>
+            <li><Link to={ROUTES.HOME}>Home</Link></li>
+            <li><Link to={ROUTES.ACCOUNT}>Account</Link></li>
 
-//const NavigationNonAuth = () => (
-//    <div>
-//        <ul>
-//            <li><Link to={ROUTES.LANDING}>Landing</Link></li>
-//            <li><Link to={ROUTES.SIGN_IN}>Sign In</Link></li>
-//            <li><SignOutButton /></li>
-//        </ul>
-//   </div>
-//);
+            {authUser.roles.includes(ROLES.ADMIN) && (
+            <li><Link to={ROUTES.ADMIN}>Admin</Link></li>)}
+            
+            <li><SignOutButton /></li>
+        </ul>
+    </div>
+);
 
-//<li><Link to={ROUTES.ADMIN}>Admin</Link></li>
+const NavigationNonAuth = () => (
+    <div>
+        <ul>
+            <li><Link to={ROUTES.LANDING}>Landing</Link></li>
+            <li><Link to={ROUTES.SIGN_IN}>Sign In</Link></li>
+            <li><SignOutButton /></li>
+        </ul>
+   </div>
+);
 
 export default Navigation;

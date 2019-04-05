@@ -1,8 +1,16 @@
 import React, { Component } from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
 import './App.css';
 import Map from './uicomponents/Map/Map.js';
 import ModeSelect from './uicomponents/ModeSelect/ModeSelect'
 import Search from './uicomponents/Search/Search';
+import Navigation from './firebasecomponents/Navigation';
+
+const App = () => (
+  <Router>
+      <Navigation />
+  </Router>
+);
 
 class App extends Component {
 

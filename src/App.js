@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, } from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 import './App.css';
 import Map from './uicomponents/Map/Map.js';
@@ -16,7 +16,6 @@ import AccountPage from './firebasecomponents/Account';
 import AdminPage from './firebasecomponents/Admin';
 
 import * as ROUTES from './firebaseconstants/routes';
-import { withFirebase } from './firebasecomponents/Firebase';
 
 import { withAuthentication } from './firebasecomponents/Session';
 
@@ -24,25 +23,17 @@ class App extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { width: 100, height: 100, mode:"edit", authUser: null, };
+    this.state = { width: 100, height: 100, mode:"edit", };
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
     this.changeMode= this.changeMode.bind(this);
   }
   componentDidMount() {
     this.updateWindowDimensions();
     window.addEventListener('resize', this.updateWindowDimensions);
-    this.listener = this.props.firebase.auth.onAuthStateChanged(
-      authUser => {
-          authUser
-          ? this.setState({ authUser })
-          : this.setState({ authUser: null });
-      },
-    );
   }
   
   componentWillUnmount() {
     window.removeEventListener('resize', this.updateWindowDimensions);
-    this.listener();
   }
   
   updateWindowDimensions() {

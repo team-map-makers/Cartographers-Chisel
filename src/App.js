@@ -45,20 +45,19 @@ class App extends Component {
 
   render() {
     return (
-      //<AuthUserContext.Provider value={this.state.authUser}>
                 <Router>
                     <div>
                         <Navigation />
 
                         <hr />
 
-                        <Route exact path={ROUTES.LANDING} components={LandingPage} />
-                        <Route path={ROUTES.SIGN_UP} components={SignUpPage} />
-                        <Route path={ROUTES.SIGN_IN} components={SignInPage} />
-                        <Route path={ROUTES.PASSWORD_FORGOT} components={PasswordForgotPage} />
-                        <Route path={ROUTES.HOME} components={HomePage} />
-                        <Route path={ROUTES.ACCOUNT} components={AccountPage} />
-                        <Route path={ROUTES.ADMIN} components={AdminPage} />
+                        <Route exact path={ROUTES.LANDING} component={LandingPage} />
+                        <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
+                        <Route path={ROUTES.SIGN_IN} component={SignInPage} />
+                        <Route path={ROUTES.PASSWORD_FORGOT} component={PasswordForgotPage} />
+                        <Route path={ROUTES.HOME} component={HomePage} />
+                        <Route path={ROUTES.ACCOUNT} component={AccountPage} />
+                        <Route path={ROUTES.ADMIN} component={AdminPage} />
             
                     </div>
                     <div className="mainContainer" >
@@ -67,7 +66,6 @@ class App extends Component {
                         <ModeSelect mode={this.state.mode} changeMode={this.changeMode}/>
                     </div>
                 </Router>
-       // </AuthUserContext.Provider>
     );
   }
 }

@@ -36,6 +36,7 @@ class SignUpFormBase extends Component {
 
     constructor(props) {
         super(props);
+
         this.state = { ...INITIAL_STATE };
     }
 
@@ -51,9 +52,7 @@ class SignUpFormBase extends Component {
             .doCreateUserWithEmailAndPassword(email, passwordOne)
             .then(authUser => {
                 //Create a user in Firebase realtime database
-                return this.props.firebase 
-                .user(authUser.user.uid)
-                .set ({ username, email, roles, });
+                return this.props.firebase.user(authUser.user.uid).set ({ username, email, roles, });
             })
 
             .then(() => {

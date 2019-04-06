@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { Switch, Route, Link } from 'react-router-dom';
+import React from 'react';
+import { Switch, Route } from 'react-router-dom';
 import { compose } from 'recompose';
 
 import { withAuthorization, withEmailVerification } from '../Session';
@@ -21,10 +21,9 @@ const AdminPage = () => (
 ); 
 
 const condition = authUser => 
-    authUser && authUser.roles.includes(ROLES.ADMIN);
+    authUser && authUser.roles[ROLES.ADMIN];
 
 export default compose(
     withEmailVerification, 
     withAuthorization(condition), 
-    withFirebase,
     )(AdminPage);

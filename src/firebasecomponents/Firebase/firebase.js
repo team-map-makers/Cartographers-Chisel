@@ -15,6 +15,7 @@ import 'firebase/database';
 class Firebase {
     constructor(){
         app.initializeApp(config);
+
         this.auth = app.auth();
         this.db = app.database();
     }
@@ -49,7 +50,7 @@ class Firebase {
 
             //default empty roles
             if (!dbUser.roles) {
-              dbUser.roles = [];
+              dbUser.roles = {};
             }
 
             //merge auth and db user

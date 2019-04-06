@@ -2,7 +2,7 @@ import React from 'react';
 import { compose } from 'recompose';
 
 import { AuthUserContext, withAuthorization, withEmailVerification,} from '../Session';
-import { PasswordFogotForm } from '../PasswordForgot';
+import { PasswordForgotForm } from '../PasswordForgot/index';
 import PasswordChangeForm from '../PasswordChange';
 
 const AccountPage = () => (

@@ -12,7 +12,7 @@ import 'firebase/database';
     messagingSenderId: "332644850082"
   };
 
-class FireBase {
+class Firebase {
     constructor(){
         app.initializeApp(config);
         this.auth = app.auth();

@@ -17,15 +17,16 @@ const INITIAL_STATE = {
 };
 
 class PasswordForgotFormBase extends Component {
-    constuctor(props) { 
+    constructor(props) { 
         super(props);
+
         this.state = { ...INITIAL_STATE };
     }
 
     onSubmit = event => {
         const { email } = this.state;
 
-        this.props.firebase 
+        this.props.firebase
             .doPasswordReset(email)
             .then(() => {
                 this.setState({ ...INITIAL_STATE });

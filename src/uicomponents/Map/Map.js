@@ -1,18 +1,26 @@
 import React, { Component } from 'react';
 import './Map.scss';
 import GenerateMap from '../../mapfunctions/GenerateMap';
+
+import * as d3 from "d3";
+import MapNav from './MapNav/MapNav';
+import EditLayer from './EditSelector/EditLayer';
 import NoteBox from '../NoteBox/NoteBox';
-import {INITIAL_VALUE, ReactSVGPanZoom, TOOL_NONE} from 'react-svg-pan-zoom';
+/**
+ * React Component that contains the map and controlls for map.
+ * @prop height - map height.
+ * @prop width - map width.
+ * @state mapData - Array of cells to be drawn on map
+ */
 
 class Map extends Component {
 
-  Viewer = null;
   constructor(props) {
     super(props);
     this.state = {
-      isToggleOn: true,
-      tool: TOOL_NONE, 
-      value: INITIAL_VALUE,
+      scale:1,
+      tranX:0,
+      tranY:0,
       notePassed:null,
       noteData:[
         {
@@ -69,35 +77,102 @@ class Map extends Component {
     this.deselectNote = this.deselectNote.bind(this);
     this.updateNote = this.updateNote.bind(this);
     this.removeNote = this.removeNote.bind(this);
+    this.updateUI = this.updateUI.bind(this);
+
+    this.scaleUp = this.scaleUp.bind(this);
+    this.scaleDown = this.scaleDown.bind(this);
+
+    this.moveDown = this.moveDown.bind(this);
+    this.moveUp = this.moveUp.bind(this);
+    this.moveLeft = this.moveLeft.bind(this);
+    this.moveRight = this.moveRight.bind(this);
+
+    this.onKeyPress = this.onKeyPress.bind(this);
+
   }
 
+  generateMap;
+  evCache =[];
+  prevDiff;
+
+  /**
+   * Default React function, called when component loads.
+   * Generates the starting mapData state.
+   */
   componentDidMount(){
-    this.Viewer.zoomOnViewerCenter(.6);
-    var generateMap = new GenerateMap();
-    var mapDataz = {};
-    mapDataz.cells =generateMap.init();
-    this.setState({mapData:mapDataz});
+    //this.Viewer.zoomOnViewerCenter(.6);
+    this.generateMap = new GenerateMap();
+    
+    this.generateMap.generateNewDiagram();
+    this.updateUI();
+    window.myMapGenerator =this.generateMap;
+    window.mapContainer = this;
+  }
+
+  updateUI(){
+    this.setState({polygons:this.generateMap.polygons});
+  }
+
+  componentDidUpdate(){
+  }
+  onPolyClick(index){
+    window.myMapGenerator.addIsland(index);
+    console.log(index);
+    this.updateUI();
   }
 
 
-  changeTool(nextTool) {
-    this.setState({tool: nextTool})
+ 
+
+  scaleUp(){
+    let newScale = this.state.scale*1.2;
+    this.setState({scale:newScale});
+  }
+  scaleDown(){
+    let newScale = this.state.scale*0.8;
+    this.setState({scale:newScale});
+  }
+  moveDown(){
+    let newY = this.state.tranY-(50/this.state.scale);
+    this.setState({tranY:newY});
+  }
+  moveUp(){
+    let newY = this.state.tranY+(50/this.state.scale);
+    this.setState({tranY:newY});
+  }
+  moveRight(){
+    let newX = this.state.tranX-(50/this.state.scale);
+    this.setState({tranX:newX});
+  }
+  moveLeft(){
+    let newX = this.state.tranX+(50/this.state.scale);
+    this.setState({tranX:newX});
   }
 
-  changeValue(nextValue) {
-    this.setState({value: nextValue})
-  }
+  onKeyPress(e){
+    console.log(e.keyCode);
+    switch (e.keyCode){
+      case 40 :
+      this.moveDown();
+      break;
+      case 39:
+      this.moveRight();
+      break;
+      case 38:
+      this.moveUp();
+      break;
+      case 37:
+      this.moveLeft();
+      break;
+      case 188:
+      this.scaleDown();
+      break;
+      case 190:
+      this.scaleUp();
+      break;
+      default:
 
-  fitToViewer() {
-    this.Viewer.fitToViewer()
-  }
-
-  fitSelection() {
-    this.Viewer.fitSelection(40, 40, 200, 200)
-  }
-
-  zoomOnViewerCenter() {
-    this.Viewer.zoomOnViewerCenter(1.1)
+      }
   }
 
   calcNote(x ,y){
@@ -131,9 +206,12 @@ class Map extends Component {
     }
   }
   render() {
-    const cells = this.state.mapData.cells.map((cell) =>
-    <path d={cell.d} fill={cell.fill} key={cell.key} />
-    )
+    var svgsPathElement = null;
+    var color = d3.scaleSequential(d3.interpolateSpectral);
+    if(this.state.polygons)
+    svgsPathElement = this.state.polygons.map((poly) =>
+    <path d={poly.path} fill={color(1-poly.height)} key={poly.index} onClick={(e) => this.onPolyClick(poly.index,e)}/>
+    );
     const notes = this.state.noteData.map((note)=> 
     <circle cx={note.location.x} cy={note.location.y} r="20" stroke="red" fill="red" strokeWidth="5" onClick={this.getNoteID.bind(this, note.id)}/>
     )
@@ -144,27 +222,17 @@ class Map extends Component {
     var miniatureProps = {};
     //miniatureProps.position ="none";
     return (
-      <div className="Map-main">
-      <ReactSVGPanZoom
-          width={this.props.width} height={this.props.height}
-          ref={Viewer => this.Viewer = Viewer}
-          tool={this.state.tool} onChangeTool={tool => this.changeTool(tool)}
-          value={this.state.value} onChangeValue={value => this.changeValue(value)}
-
-          miniatureProps={miniatureProps}
-          onZoom={e => console.log('zoom')}
-          onPan={e => console.log('pan')}
-
-          onClick={event => console.log(this.calcNote(event.x, event.y))}
-         
-
-        >
-      <svg width={2000} height={1000} >
-      {cells}
-      {notes}
-      
-      </svg>
-      </ReactSVGPanZoom>
+      <div className="Map-main" onKeyDown={this.onKeyPress} tabIndex="0">
+      <svg width={this.props.width}  height={this.props.height} onPointerDown={this.pointerdown_handler}
+        onPointerUp={this.pointerup_handler}
+        onPointerMove={this.pointermove_handler} onKeyDown={this.onKeyPress} tabIndex="0">
+        <g transform={"scale("+this.state.scale+")translate("+this.state.tranX+","+this.state.tranY+")"}>
+          {svgsPathElement}
+          {notes}
+        </g>
+        </svg>
+        <MapNav scaleDown={this.scaleDown} scaleUp={this.scaleUp} down={this.moveDown} up={this.moveUp} right={this.moveRight} left={this.moveLeft}/>
+        <EditLayer/>
       <NoteBox mode={this.props.mode} note={notePassedFull} exitEvent={this.deselectNote} updateNote={this.updateNote} removeNote={this.removeNote}>
       </NoteBox>
 

@@ -4,14 +4,18 @@
   "private": true,
   "dependencies": {
     "autosize": "^4.0.2",
-    "d3": "^5.9.1",
+    "d3": "^5.9.2",
     "d3-geo-voronoi": "^1.1.2",
+    "dotenv": "^7.0.0",
+    "firebase": "^5.9.3",
     "node-sass": "^4.11.0",
     "react": "^16.8.1",
     "react-dom": "^16.8.1",
     "react-redux": "^6.0.1",
+    "react-router-dom": "^5.0.0",
     "react-scripts": "2.1.5",
     "react-svg-pan-zoom": "^3.0.3",
+    "recompose": "^0.30.0",
     "redux": "^4.0.1"
   },
   "scripts": {

@@ -6,6 +6,8 @@ import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../firebaseconstants/routes';
 import * as ROLES from '../../firebaseconstants/roles';
 
+import './SignUp.scss';
+
 const SignUpPage = () => (
     <div>
         <center>
@@ -104,7 +106,7 @@ class SignUpFormBase extends Component {
 
         return (
         <form onSubmit={this.onSubmit}>
-            <input
+            <input className="Username-Text"
                 name="username"
                 value={username}
                 onChange={this.onChange}
@@ -112,7 +114,7 @@ class SignUpFormBase extends Component {
                 placeholder="Full Name"
             />
             <h1></h1>
-            <input
+            <input className="Email-Text"
                 name="email"
                 value={email}
                 onChange={this.onChange}
@@ -120,7 +122,7 @@ class SignUpFormBase extends Component {
                 placeholder="Email Address"
             />
             <h1></h1>
-             <input
+             <input className="Password1-Text"
                 name="passwordOne"
                 value={passwordOne}
                 onChange={this.onChange}
@@ -128,7 +130,7 @@ class SignUpFormBase extends Component {
                 placeholder="Password"
             />
             <h1></h1>
-             <input
+             <input className="Password2-Text"
                 name="passwordTwo"
                 value={passwordTwo}
                 onChange={this.onChange}

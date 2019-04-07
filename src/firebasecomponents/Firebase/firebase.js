@@ -82,6 +82,7 @@ class Firebase {
     //***User API ***/
 
     user = uid => this.db.ref(`users/${uid}`);
+    maps = uid => this.db.ref(`users/${uid}/maps`);
     users = () => this.db.ref('users');
 }
 

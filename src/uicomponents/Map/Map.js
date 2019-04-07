@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './Map.scss';
 import GenerateMap from '../../mapfunctions/GenerateMap';
+import { withFirebase } from '../../firebasecomponents/Firebase';
 
 import * as d3 from "d3";
 import MapNav from './MapNav/MapNav';
@@ -109,6 +110,7 @@ class Map extends Component {
     window.myMapGenerator =this.generateMap;
     window.mapContainer = this;
   }
+
 
   updateUI(){
     this.setState({polygons:this.generateMap.polygons});
@@ -260,4 +262,4 @@ class Map extends Component {
   }
 }
 
-export default Map;
+export default withFirebase(Map);

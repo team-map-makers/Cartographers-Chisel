@@ -96,6 +96,9 @@ class Map extends Component {
     this.removeNote = this.removeNote.bind(this);
     this.updateUI = this.updateUI.bind(this);
 
+    this.onAddHeight = this.onAddHeight.bind(this);
+    this.onSlider = this.onSlider.bind(this);
+
     this.scaleUp = this.scaleUp.bind(this);
     this.scaleDown = this.scaleDown.bind(this);
 
@@ -133,7 +136,16 @@ class Map extends Component {
     });
   }
 
-  componentDidUpdate() {}
+  componentDidUpdate(){
+  }
+
+
+  onAddHeight(mode){
+    this.setState({editMode:mode});
+  }
+  onSlider(value){
+    this.setState({editValue: value});
+  }
   onPolyClick(index,e){
     if(this.props.mode === "edit"){
       if (!this.state.change_color) {
@@ -144,7 +156,19 @@ class Map extends Component {
         if (choosen_color) this.generateMap.addColor(index, choosen_color);
         console.log(choosen_color);
         
-      } else this.generateMap.addIsland(index);
+      } else{
+      switch(this.state.editMode){
+        case "Down":
+        this.generateMap.addHeight(index,this.state.editValue, -.1);
+        break;
+        case "Up":
+        this.generateMap.addHeight(index,this.state.editValue, .1);
+        break;
+        default:
+
+          window.myMapGenerator.addIsland(index);
+      }
+      }
       console.log(index);
       this.updateUI();
     }
@@ -302,17 +326,22 @@ class Map extends Component {
       <circle
         cx={note.location.x}
         cy={note.location.y}
-        r="20"
+        r="5"
         stroke="red"
         fill="red"
         strokeWidth="5"
         onClick={this.getNoteID.bind(this, note.id)}
       />
     ));
+
     var notePassedFull = null;
     if (this.state.notePassed != null) {
       notePassedFull = this.state.noteData.find(this.findNoteId);
     }
+  }
+
+    
+    
     var miniatureProps = {};
     //miniatureProps.position ="none";
     return (
@@ -349,7 +378,7 @@ class Map extends Component {
           right={this.moveRight}
           left={this.moveLeft}
         />{" "}
-        <EditLayer />
+        <EditLayer heightFun={this.onAddHeight} sliderSet={this.onSlider}/>
         <NoteBox
           mode={this.props.mode}
           note={notePassedFull}

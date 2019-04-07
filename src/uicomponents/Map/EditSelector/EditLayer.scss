@@ -9,7 +9,7 @@
     background: white;
 
 }
-.EditButton-bar{
+.EditButton-slider{
     position: absolute;
     width: 144px;
     bottom: 72px;
@@ -17,4 +17,22 @@
     border-radius: 50px;
     background: whitesmoke;
 
+}
+
+.EditButton-slider-hidden{
+    position: absolute;
+    width: 144px;
+    bottom: 72px;
+    left: 16px;
+    border-radius: 50px;
+    background: whitesmoke;
+    visibility: hidden;
+
+}
+
+.EL-active{
+    fill:green;
+}
+.stupidFix{
+    pointer-events: none;
 }

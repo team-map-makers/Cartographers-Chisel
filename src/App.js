@@ -19,6 +19,8 @@ import * as ROUTES from './firebaseconstants/routes';
 
 import { withAuthentication } from './firebasecomponents/Session';
 
+require('dotenv').config();
+
 //require('dotenv').config()
 
 class App extends Component {

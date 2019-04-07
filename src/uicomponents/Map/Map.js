@@ -338,11 +338,7 @@ class Map extends Component {
     if (this.state.notePassed != null) {
       notePassedFull = this.state.noteData.find(this.findNoteId);
     }
-  }
 
-    
-    
-    var miniatureProps = {};
     //miniatureProps.position ="none";
     return (
       <div className="Map-main" onKeyDown={this.onKeyPress} tabIndex="0">

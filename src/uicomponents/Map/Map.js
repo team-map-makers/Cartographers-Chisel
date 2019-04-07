@@ -88,6 +88,7 @@ class Map extends Component {
     this.moveRight = this.moveRight.bind(this);
 
     this.onKeyPress = this.onKeyPress.bind(this);
+  
 
   }
 
@@ -115,11 +116,29 @@ class Map extends Component {
 
   componentDidUpdate(){
   }
-  onPolyClick(index){
-    window.myMapGenerator.addIsland(index);
-    console.log(index);
-    this.updateUI();
+  onPolyClick(index,e){
+    if(this.props.mode === "edit"){
+      window.myMapGenerator.addIsland(index);
+      console.log(index);
+      this.updateUI();
+    }
+    if(this.props.mode === "note"){
+      //add note
+
+      console.log(e.clientY,e.clientX);
+      let noteArray=this.state.noteData;
+       let newNote = {
+         id:noteArray.length+1,
+         title:"",
+         location:{x:((e.clientX)/this.state.scale) -this.state.tranX,y:((e.clientY)/this.state.scale) - this.state.tranY},
+         text: ""
+       }
+       
+       noteArray.push(newNote);
+       this.setState({noteData:noteArray})
+    }
   }
+
 
 
  
@@ -213,7 +232,7 @@ class Map extends Component {
     <path d={poly.path} fill={color(1-poly.height)} key={poly.index} onClick={(e) => this.onPolyClick(poly.index,e)}/>
     );
     const notes = this.state.noteData.map((note)=> 
-    <circle cx={note.location.x} cy={note.location.y} r="20" stroke="red" fill="red" strokeWidth="5" onClick={this.getNoteID.bind(this, note.id)}/>
+    <circle cx={note.location.x} cy={note.location.y} r="5" stroke="red" fill="red" strokeWidth="5" onClick={this.getNoteID.bind(this, note.id)}/>
     )
     var notePassedFull = null;
     if(this.state.notePassed!=null){
@@ -223,7 +242,7 @@ class Map extends Component {
     //miniatureProps.position ="none";
     return (
       <div className="Map-main" onKeyDown={this.onKeyPress} tabIndex="0">
-      <svg width={this.props.width}  height={this.props.height} onPointerDown={this.pointerdown_handler}
+      <svg width={this.props.width}  height={this.props.height} onClick={(e)=>this.onSVGClickHandler}
         onPointerUp={this.pointerup_handler}
         onPointerMove={this.pointermove_handler} onKeyDown={this.onKeyPress} tabIndex="0">
         <g transform={"scale("+this.state.scale+")translate("+this.state.tranX+","+this.state.tranY+")"}>

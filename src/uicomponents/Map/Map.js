@@ -360,7 +360,7 @@ class Map extends Component {
         <div className="Map-coloring">
           <button onClick={this.switch_edit_mode}> Switch edit mode </button>{" "}
         </div>{" "}
-        {this.props.mode ==="edit"?<div className="Map-colorpicker">
+        {this.props.mode ==="edit" && !this.state.change_color?<div className="Map-colorpicker">
           <GithubPicker onChangeComplete={this.updateColor}/>
         </div> : null}
       </div>

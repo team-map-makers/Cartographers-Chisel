@@ -69,7 +69,6 @@ class Map extends Component {
     this.deselectNote = this.deselectNote.bind(this);
     this.updateNote = this.updateNote.bind(this);
     this.removeNote = this.removeNote.bind(this);
-    //this.addNote = this.addNote.bind(this);
   }
 
   componentDidMount(){
@@ -79,18 +78,6 @@ class Map extends Component {
     mapDataz.cells =generateMap.init();
     this.setState({mapData:mapDataz});
   }
-
-  /*
-  addNote(x,y){
-    if(this.props.mode === "edit"){
-      //create note at this x,y position, giving x and y to the note constructor
-      var note = new note(x,y);
-      mapData.push(note);
-      
-    }
-  }
-*/
- 
 
 
   changeTool(nextTool) {
@@ -114,8 +101,6 @@ class Map extends Component {
   }
 
   calcNote(x ,y){
-    //this.calcNote
-
     return "x = "+x+", y = "+y;
 
   }
@@ -170,8 +155,8 @@ class Map extends Component {
           onZoom={e => console.log('zoom')}
           onPan={e => console.log('pan')}
 
-          onClick={event => console.log(this.calcNote(event.x, event.y))}//console.log('click', event.x, event.y, event.originalEvent)}
-          //onClick={event => this.addNote(event.x, event.y)}//console.log('click', event.x, event.y, event.originalEvent)}
+          onClick={event => console.log(this.calcNote(event.x, event.y))}
+         
 
         >
       <svg width={2000} height={1000} >

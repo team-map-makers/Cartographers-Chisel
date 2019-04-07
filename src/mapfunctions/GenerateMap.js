@@ -1,5 +1,4 @@
 import * as d3 from 'd3';
-import * as d4 from 'd3-geo-voronoi';
 
 class GenerateMap {
 

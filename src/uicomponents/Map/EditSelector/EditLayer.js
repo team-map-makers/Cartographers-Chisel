@@ -42,7 +42,7 @@ setAlgorithm(e){
 
 handleChange = (event) => {
     this.setState({sliderValue: event.target.value});
-    this.props.sliderSet(this.state.sliderValue);
+    this.props.sliderSet(event.target.value);
 };
 
   render() {

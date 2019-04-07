@@ -18,7 +18,7 @@ const Navigation = () => (
 );
 
 const NavigationAuth = ({ authUser }) => (
-    <div>
+    <nav>
         <ul className="Links-Order">
         <li><Link to={ROUTES.LANDING}>Landing</Link></li>
         <li><Link to={ROUTES.HOME}>Home</Link></li>
@@ -29,7 +29,7 @@ const NavigationAuth = ({ authUser }) => (
 
             <li><SignOutButton /></li>
         </ul>
-    </div>
+    </nav>
 );
 
 const NavigationNonAuth = () => (

@@ -8,8 +8,11 @@ import * as ROLES from '../../firebaseconstants/roles';
 
 const SignUpPage = () => (
     <div>
+        <center>
         <h1>SignUp</h1>
         <SignUpForm />
+        <h1></h1>
+        </center>
     </div>
 );
 
@@ -99,7 +102,8 @@ class SignUpFormBase extends Component {
             email === '' ||
             username === '';
 
-        return (<form onSubmit={this.onSubmit}>
+        return (
+        <form onSubmit={this.onSubmit}>
             <input
                 name="username"
                 value={username}
@@ -107,6 +111,7 @@ class SignUpFormBase extends Component {
                 type="text"
                 placeholder="Full Name"
             />
+            <h1></h1>
             <input
                 name="email"
                 value={email}
@@ -114,6 +119,7 @@ class SignUpFormBase extends Component {
                 type="text"
                 placeholder="Email Address"
             />
+            <h1></h1>
              <input
                 name="passwordOne"
                 value={passwordOne}
@@ -121,6 +127,7 @@ class SignUpFormBase extends Component {
                 type="text"
                 placeholder="Password"
             />
+            <h1></h1>
              <input
                 name="passwordTwo"
                 value={passwordTwo}
@@ -128,6 +135,7 @@ class SignUpFormBase extends Component {
                 type="text"
                 placeholder="Confirm Password"
             />
+            <h1></h1>
             <label>
                 Admin:
                 <input
@@ -137,6 +145,7 @@ class SignUpFormBase extends Component {
                     onChange={this.onChangeCheckbox}
                 />
             </label>
+            <h1></h1>
             <button disabled={isInvalid} type="submit">Sign Up</button>
 
             {error && <p>{error.message}</p>}

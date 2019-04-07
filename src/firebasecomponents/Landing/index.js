@@ -1,8 +1,12 @@
 import React from 'react';
 
+import "./Landing.scss";
+
 const Landing = () => (
-    <div>
-        <h1>Landing</h1>
+    <div className="Landing-Main">
+        <center>
+        <h1>Cartographer's Chisel</h1>
+        </center>
     </div>
 );
 

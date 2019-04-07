@@ -4,7 +4,7 @@ import AuthUserContext from './context';
 import { withFirebase } from '../Firebase';
 
 const needsEmailVerification = authUser =>
-    authUser && !authUser.emailVerified && authUser.provideerData
+    authUser && !authUser.emailVerified && authUser.providerData
         .map(provider => provider.providerId)
         .includes('password');
 

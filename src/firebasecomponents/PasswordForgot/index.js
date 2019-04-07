@@ -4,10 +4,15 @@ import { Link } from 'react-router-dom';
 import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../firebaseconstants/routes';
 
+import './passwordforgot.scss'
+
 const PasswordForgotPage = () => (
-    <div>
-        <h1>PasswordForgot</h1>
+    <div className="Forgot-Password-Form">
+    <center>
+        <h1>Did you forget your password?</h1>
         <PasswordForgotForm />
+        <h1></h1>
+        </center>
     </div>
 );
 
@@ -47,16 +52,18 @@ class PasswordForgotFormBase extends Component {
         const isInvalid = email === '';
 
         return (
-            <form onSubmit={this.onSubmit}>
-                <input
+            <form onSubmit={this.onSubmit}  >
+                <input className="Forgot-Password-Fields"
                     name="email"
                     value={this.state.email}
                     onChange={this.onChange}
                     type="text"
                     placeholder="Email Address"
                 />
+                <h1></h1>
+                <div className="Forgot-Password-Button">
                 <button disabled={isInvalid} type="submit">Reset My Password</button>
-
+                </div>
                 {error && <p>{error.message}</p>}
             </form>
         );

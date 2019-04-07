@@ -115,7 +115,7 @@ class GenerateMap {
       queue = [],
       me = this;
     let color = d3.scaleSequential(d3.interpolateSpectral);
-    me.polygons[start].height = height;
+    me.polygons[start].height += height;
     me.polygons[start].color = color(1 - me.polygons[start].height);
     me.polygons[start].used = 1;
     let addHeightWithNeigbors = function(e) {

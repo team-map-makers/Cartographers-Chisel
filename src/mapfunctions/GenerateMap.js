@@ -1,57 +1,148 @@
 import * as d3 from 'd3';
+
 class GenerateMap {
 
-  
   constructor() {
-    this.init = this.init.bind(this);
-  }
-  mapData ={};
-  init(){
-    var MAP_HEIGHT = 1000;
-    var MAP_WIDTH = 2000;
-    //his.mapData.width =2000;
-    //this.mapData.height =1000;
-    this.mapData.sites = d3.range(1000).map(function(d) {
-      return [Math.random(1) * MAP_WIDTH, Math.random(1) * MAP_HEIGHT];
-    });
-    var voronoi = d3.voronoi().extent([[0, 0],[MAP_WIDTH, MAP_HEIGHT]]);
-    this.mapData.diagram = voronoi(this.mapData.sites);
-    var color = d3.scaleSequential(d3.interpolateSpectral);
-    this.mapData.cells = [];
-    //debugger;
-    this.mapData.cells = this.mapData.diagram.polygons().map(function(path, id) {
-      var cell ={};
-      cell.key = id;
-      cell.d = "M" + path.join("L") + "Z";
-      cell.fill=color(id/2000);
-      return cell;
-    })
-    return this.mapData.cells
-  }
-  // init(height,width){
+    //Bind all functions here
 
-  //   var svg = d3.select("svg"),
-  //     sites = d3.range(1000).map(function(d) {
-  //         return [Math.random() * width, Math.random() * height];
-  //     }),
-  //     voronoi = d3.voronoi().extent([[0, 0],[width, height]]),
-  //     diagram = voronoi(sites), polygons = diagram.polygons(),
-  //       // Add spectral color range[0,1] using d3-scale-chromatic
-  //     color = d3.scaleSequential(d3.interpolateSpectral); 
-       
-  //     // Draw the colored polygons
-  //   polygons.map(function(i, d) {
-  //     svg.append("path")
-  //     .attr("d", "M" + i.join("L") + "Z")
-  //     .attr("fill", color(d/1000));
-  //   });
-  //       //relax(svg,sites,diagram,polygons,voronoi,color);
-  //       //relax(svg,sites,diagram,polygons,voronoi,color);
-  //       //addIsland();
-  // }
-       
-  //     // Adding relax function
+    this.relaxVoronoi = this.relaxVoronoi.bind(this);
+    this.generateNewDiagram = this.generateNewDiagram.bind(this);
+    this.addIsland = this.addIsland.bind(this);
+
+    this.justWorks = this.justWorks.bind(this);
+    this.height =1000;
+    this.width =1500;
+
+  }
+  height;
+  width;
+  sites;
+  diagram;
+  polygons;
+  voronoi;
+
+  /**
+   * Makes an array of sites. Tries to get height from the map data, else uses default.
+   * Assigns it to this.mapData.site, and returns it.
+   */
+  justWorks() {
+    var me = this;
+    this.sites = d3.range(10000).map(function (d) {
+      return [Math.random() * me.width, Math.random() * me.height];
+    });
+    this.voronoi = d3.voronoi().extent([
+      [0, 0],
+      [this.width, this.height]
+    ]);
+    this.diagram = this.voronoi(this.sites);
+    this.polygons = this.diagram.polygons();
+  }
+
+  generateNewDiagram() {
+    this.justWorks();
+    this.relaxVoronoi();
+    this.relaxVoronoi();
+    var me = this;
+    this.makePathFromPolyon(me);
+
+  }
+
+  makePathFromPolyon(scope) {
+    scope.polygons.forEach(function (poly) {
+      poly.path = "M" + poly.join("L") + "Z";
+      poly.height = 0;
+    });
+  }
+
+  relaxVoronoi() {
+    // relaxation itself
+    this.sites = this.voronoi(this.sites).polygons().map(d3.polygonCentroid);
+    this.diagram = this.voronoi(this.sites);
+    this.polygons = this.diagram.polygons();
+    var me = this;
+
+    // push neighbors indexes to each polygons element
+    this.polygons.map(function (i, d) {
+      i.index = d; // index of this element
+      var neighbors = [];
+      me.diagram.cells[d].halfedges.forEach(function (e) {
+        var edge = me.diagram.edges[e],
+          ea;
+        if (edge.left && edge.right) {
+          ea = edge.left.index;
+          if (ea === d) {
+            ea = edge.right.index;
+          }
+          neighbors.push(ea);
+        }
+      });
+      i.neighbors = neighbors;
+    });
+  }
+
+  addHeight(start,numberOfNeigbors,addheight){
+    this.polygons[start].used = 1;
+    let queue = [];
+    let me =this;
+    queue.push(start);
+    let addNeighborsToQueue = (poly) => {
+      me.polygons[poly].neighbors.forEach(e =>{
+        if(!me.polygons[e].used){
+          queue.push(e);
+
+          me.polygons[e].used = 1;
+        }
+      });
+    };
+    for(let i =0;i<numberOfNeigbors;i++){
+        queue.forEach(index =>{
+          addNeighborsToQueue(index);
+        });
+    }
+    queue.forEach(index =>{
+      if(me.polygons[index].height<.95)
+      me.polygons[index].height +=addheight;
+    })
+    this.polygons.forEach(function (e) {
+      e.used = null;
+    });
+
+  }
+  addIsland(start) {
+
+    // get options from inputs
+    var height = .6,
+      radius = .993,
+      sharpness = .6,
+      i,
+      queue = [],
+      me = this;
+    me.polygons[start].height = height;
+    me.polygons[start].used = 1;
+    let addHeightWithNeigbors = function (e) {
+
+      if (!me.polygons[e].used) {
+        me.polygons[e].height += height;
+        // max height is 1
+        if (me.polygons[e].height > 1) {
+          me.polygons[e].height = 1;
+        }
+        me.polygons[e].used = 1;
+        queue.push(e);
+      }
+    }
+    queue.push(start);
+    for (i = 0; i < queue.length && height > 0.01; i++) {
+      height *= radius;
+
+      me.polygons[queue[i]].neighbors.forEach(addHeightWithNeigbors);
+    }
+    me.polygons.forEach(function (e) {
+      e.used = null;
+    });
+  }
 }
 
-export default GenerateMap;
 
+
+export default GenerateMap;

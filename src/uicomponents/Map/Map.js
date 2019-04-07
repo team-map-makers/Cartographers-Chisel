@@ -134,18 +134,35 @@ class Map extends Component {
   }
 
   componentDidUpdate() {}
-  onPolyClick(index) {
-    if (!this.state.change_color) {
-      ///display picker, get color,
-      console.log("hello");
-      
-      let { choosen_color } = this.state;
-      if (choosen_color) this.generateMap.addColor(index, choosen_color);
-      console.log(choosen_color);
-      
-    } else this.generateMap.addIsland(index);
-    console.log(index);
-    this.updateUI();
+  onPolyClick(index,e){
+    if(this.props.mode === "edit"){
+      if (!this.state.change_color) {
+        ///display picker, get color,
+        console.log("hello");
+        
+        let { choosen_color } = this.state;
+        if (choosen_color) this.generateMap.addColor(index, choosen_color);
+        console.log(choosen_color);
+        
+      } else this.generateMap.addIsland(index);
+      console.log(index);
+      this.updateUI();
+    }
+    if(this.props.mode === "note"){
+      //add note
+
+      console.log(e.clientY,e.clientX);
+      let noteArray=this.state.noteData;
+       let newNote = {
+         id:noteArray.length+1,
+         title:"",
+         location:{x:((e.clientX)/this.state.scale) -this.state.tranX,y:((e.clientY)/this.state.scale) - this.state.tranY},
+         text: ""
+       }
+       
+       noteArray.push(newNote);
+       this.setState({noteData:noteArray})
+    }
   }
 
   scaleUp() {
